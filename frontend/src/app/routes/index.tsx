@@ -12,7 +12,7 @@ export const AppRoutes = () => {
         <Suspense fallback={<FullScreenLoader />}>
             <Routes>
                 <Route element={<AuthLayout />}>
-                    <Route path='/' element={<LoginPage />} />
+                    <Route path='/login' element={<LoginPage />} />
                 </Route>
                 <Route element={<MainLayout />}>
                     <Route path='/' element={<MainPage />} />
