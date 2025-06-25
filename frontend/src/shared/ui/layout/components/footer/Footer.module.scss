@@ -1,0 +1,23 @@
+.footer {
+    .footerContainer {
+        margin: 0 auto;
+    }
+
+    .footerBrand h2 {
+        margin-bottom: 8px;
+        font-size: 24px;
+        color: var(--ant-color-primary);
+    }
+
+    .footerContact p {
+        margin: 5px 0;
+    }
+
+    .footerBottom {
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 15px;
+        font-size: 14px;
+        color: #999;
+    }
+}

@@ -5,7 +5,7 @@ import { Outlet } from 'react-router';
 export const AuthLayout = () => {
     return (
         <ANTDLayout className={styles.authLayout}>
-            <ANTDLayout.Content>
+            <ANTDLayout.Content className={styles.authContent}>
                 <Outlet />
             </ANTDLayout.Content>
         </ANTDLayout>

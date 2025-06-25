@@ -5,7 +5,10 @@ import { BrowserRouter } from 'react-router';
 export const AppProviders = (props: PropsWithChildren) => {
     return (
         <BrowserRouter>
-            <ConfigProvider wave={{ disabled: true }}>
+            <ConfigProvider
+                theme={{ cssVar: true, hashed: false }}
+                wave={{ disabled: true }}
+            >
                 {props.children}
             </ConfigProvider>
         </BrowserRouter>

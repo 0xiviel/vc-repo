@@ -1,3 +1,10 @@
 .authLayout {
     height: 100vh;
+    padding: 24px;
+}
+
+.authContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
