@@ -49,7 +49,10 @@ export const SignIn = () => {
                     </Button>
                 </Form.Item>
             </Form>
-            <Link to='/register'>Don't have an account?</Link>
+            <Flex gap={20} align='center' vertical>
+                <Link to='/forgot-password'>Forgot password</Link>
+                <Link to='/register'>Don't have an account?</Link>
+            </Flex>
         </Flex>
     );
 };
