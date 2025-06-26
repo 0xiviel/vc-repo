@@ -8,6 +8,8 @@ const NotFoundPage = lazy(() => import('@pages/not-found'));
 
 const SignInPage = lazy(() => import('@pages/signin'));
 const RegisterPage = lazy(() => import('@pages/register'));
+const ForgotPasswordPage = lazy(() => import('@pages/forgot-password'));
+const ResetPasswordPage = lazy(() => import('@pages/reset-password'));
 
 export const AppRoutes = () => {
     return (
@@ -16,6 +18,14 @@ export const AppRoutes = () => {
                 <Route element={<AuthLayout />}>
                     <Route path='/signin' element={<SignInPage />} />
                     <Route path='/register' element={<RegisterPage />} />
+                    <Route
+                        path='/forgot-password'
+                        element={<ForgotPasswordPage />}
+                    />
+                    <Route
+                        path='/reset-password'
+                        element={<ResetPasswordPage />}
+                    />
                 </Route>
                 <Route element={<MainLayout />}>
                     <Route path='/' element={<MainPage />} />
