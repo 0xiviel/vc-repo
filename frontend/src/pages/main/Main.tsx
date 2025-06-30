@@ -1,8 +1,13 @@
-import { Flex, Image, Typography } from 'antd';
+import { Button, Flex, Image, Space, Typography } from 'antd';
 import MainBg from '@shared/assets/images/main-page-bg.jpg';
 import styles from './Main.module.scss';
+import { useNavigate } from 'react-router';
 
 export const Main = () => {
+    const navigate = useNavigate();
+
+    const onBook = () => navigate('/book-form');
+
     return (
         <Flex className={styles.main}>
             <Flex
@@ -10,7 +15,7 @@ export const Main = () => {
                 align='center'
                 justify='space-between'
             >
-                <Flex vertical>
+                <Space direction='vertical'>
                     <Typography.Title className={styles.title}>
                         Find Your Perfect Workspace with EventBook
                     </Typography.Title>
@@ -18,7 +23,10 @@ export const Main = () => {
                         Book meeting rooms, desks, and event spaces — anytime,
                         anywhere.
                     </Typography.Title>
-                </Flex>
+                    <Button type='primary' onClick={onBook}>
+                        Book a workspace
+                    </Button>
+                </Space>
                 <Image src={MainBg} preview={false} width='50%' />
             </Flex>
         </Flex>

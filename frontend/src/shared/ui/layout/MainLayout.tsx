@@ -8,7 +8,7 @@ export const MainLayout = () => {
     return (
         <ANTDLayout className={styles.mainLayout}>
             <Header />
-            <ANTDLayout.Content>
+            <ANTDLayout.Content className={styles.content}>
                 <Outlet />
             </ANTDLayout.Content>
             <Footer />

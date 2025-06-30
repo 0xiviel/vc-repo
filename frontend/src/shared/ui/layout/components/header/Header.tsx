@@ -7,7 +7,7 @@ import {
     Typography,
 } from 'antd';
 import styles from './Header.module.scss';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { APP_TOKEN_KEY } from '@shared/constants';
 import { useMediaQuery } from '@shared/hooks';
 import { MenuFoldOutlined } from '@ant-design/icons';
@@ -61,7 +61,9 @@ export const Header = () => {
                 align='center'
                 style={{ height: '100%' }}
             >
-                <Typography.Text>EventBook</Typography.Text>
+                <Link to='/'>
+                    <Typography.Text>EventBook</Typography.Text>
+                </Link>
                 {displayedRightContent}
             </Flex>
         </ANTDLayout.Header>
