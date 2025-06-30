@@ -1,3 +1,10 @@
-from sqlalchemy.orm import declarative_base
+from fastapi_users import schemas
 
-Base = declarative_base()
+class UserRead(schemas.BaseUser[int]):
+    username: str
+
+class UserCreate(schemas.BaseUserCreate):
+    username: str
+
+class UserUpdate(schemas.BaseUserUpdate):
+    username: str

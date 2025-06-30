@@ -1,5 +1,11 @@
-from sqlalchemy import create_engine
+from pathlib import Path
+from pydantic_settings import BaseSettings
 
-DATABASE_URL = "sqlite:///./test.db"
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+class Settings(BaseSettings):
+    BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
+    DATABASE_URL: str = f"sqlite+aiosqlite:///{BASE_DIR / 'test.db'}"
+    SECRET_KEY: str = "super-secret"
+
+
+settings = Settings()
