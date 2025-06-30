@@ -4,6 +4,7 @@ import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
 const MainPage = lazy(() => import('@pages/main'));
+const BookPage = lazy(() => import('@pages/book'));
 const NotFoundPage = lazy(() => import('@pages/not-found'));
 
 const SignInPage = lazy(() => import('@pages/signin'));
@@ -29,6 +30,7 @@ export const AppRoutes = () => {
                 </Route>
                 <Route element={<MainLayout />}>
                     <Route path='/' element={<MainPage />} />
+                    <Route path='/book-form' element={<BookPage />} />
                 </Route>
                 <Route path='*' element={<NotFoundPage />} />
             </Routes>
