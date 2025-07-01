@@ -1,10 +1,9 @@
 from fastapi_users import FastAPIUsers
 from app.models.user import User
 from app.models.schemas import UserCreate, UserRead, UserUpdate
-from app.services.user_manager import UserManager
+from app.services.user_manager import UserManager, get_user_manager
 from app.dependencies import auth_backend
 from fastapi_users.db import SQLAlchemyUserDatabase
-from app.database import get_db
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy import select
 from app.settings import settings
@@ -15,9 +14,6 @@ app = FastAPI()
 
 engine = create_async_engine(settings.DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
-
-def get_user_manager():
-    yield UserManager(SQLAlchemyUserDatabase(get_db(), User))
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,

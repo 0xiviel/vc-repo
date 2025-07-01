@@ -1,6 +1,9 @@
 # backend/app/services/user_manager.py
+
+from fastapi import Depends
 from fastapi_users import BaseUserManager, IntegerIDMixin
-from app.models.user import User
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
+from app.models.user import User, get_user_db
 from app.settings import settings
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
@@ -9,3 +12,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
 
     async def on_after_register(self, user: User, request=None):
         print(f"User registered: {user.id}")
+
+
+async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
+    yield UserManager(user_db)
