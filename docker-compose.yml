@@ -1,8 +1,42 @@
-version: '3'
+version: '3.8'
 services:
-  app:
-    build: ./backend
-    #command: bash -c "cd app && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
-    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vc-backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///app/test.db
+    volumes:
+      - backend_data:/app
+    networks:
+      - app_network
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vc-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - app_network
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: vc-nginx
+    restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8000:80"
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app_network
+networks:
+  app_network:
+    driver: bridge
+volumes:
+  backend_data:

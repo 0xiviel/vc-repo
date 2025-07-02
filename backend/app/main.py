@@ -9,8 +9,18 @@ from sqlalchemy import select
 from app.settings import settings
 
 from fastapi import FastAPI
+from app.routes.root import router as root_router
 
-app = FastAPI()
+app = FastAPI(
+    title="Virtual Company API",
+    description="API for Virtual Company application",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# Include root router
+app.include_router(root_router)
 
 engine = create_async_engine(settings.DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
