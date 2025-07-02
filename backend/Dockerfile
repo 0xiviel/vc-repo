@@ -1,13 +1,16 @@
-FROM python:3.9-slim
-
+FROM python:3.11-slim
 WORKDIR /app
-
 COPY requirements.txt .
-
-RUN echo $(ls -1 /tmp/dir)
-
-RUN pip install -r requirements.txt
-
+RUN pip install --no-cache-dir -r requirements.txt
+# Install additional dependencies for SQLite
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 COPY . .
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Script to run migrations and start the application
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+EXPOSE 8000
+ENTRYPOINT ["/docker-entrypoint.sh"]
