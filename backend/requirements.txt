@@ -1,6 +1,6 @@
 annotated-types==0.7.0
-anyio==4.9.0
-click==8.2.1
+anyio
+click
 fastapi==0.115.13
 h11==0.16.0
 idna==3.10
@@ -17,5 +17,8 @@ starlette==0.46.2
 typing-inspection==0.4.1
 typing_extensions==4.14.0
 uvicorn==0.34.3
-fastapi-users[sqlalchemy2]
+fastapi-users[sqlalchemy]
 email-validator
+pydantic_settings
+aiosqlite
+alembic
