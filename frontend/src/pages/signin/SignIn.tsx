@@ -1,31 +1,36 @@
 import { Button, Flex, Form, Input, Typography } from 'antd';
 import styles from './SignIn.module.scss';
-import { Link, useNavigate } from 'react-router';
-import { APP_TOKEN_KEY } from '@shared/constants';
+import { Link } from 'react-router';
+import { useUserSignIn } from '@entities/user';
+
+type SignInFormValues = {
+    username: string;
+    password: string;
+};
 
 export const SignIn = () => {
-    const navigate = useNavigate();
+    const userSignInMutation = useUserSignIn();
 
-    const onFinish = () => {
-        navigate('/');
-        localStorage.setItem(APP_TOKEN_KEY, 'auth_token');
+    const onFinish = (data: SignInFormValues) => {
+        userSignInMutation.mutate(data);
     };
 
     return (
         <Flex align='center' className={styles.signIn} vertical>
             <Typography.Title>Sign in</Typography.Title>
-            <Form layout='vertical' className={styles.form} onFinish={onFinish}>
-                <Form.Item
-                    label='Email'
-                    name='email'
+            <Form<SignInFormValues>
+                layout='vertical'
+                className={styles.form}
+                onFinish={onFinish}
+                disabled={userSignInMutation?.isPending}
+            >
+                <Form.Item<SignInFormValues>
+                    label='Username'
+                    name='username'
                     rules={[
                         {
-                            type: 'email',
-                            message: 'The input is not valid E-mail',
-                        },
-                        {
                             required: true,
-                            message: 'Please input your E-mail',
+                            message: 'Please input your username',
                         },
                     ]}
                 >
