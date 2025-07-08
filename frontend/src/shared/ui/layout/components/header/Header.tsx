@@ -12,9 +12,11 @@ import { APP_TOKEN_KEY } from '@shared/constants';
 import { useMediaQuery } from '@shared/hooks';
 import { MenuFoldOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { useUserSignOut } from '@entities/user';
 
 export const Header = () => {
     const navigate = useNavigate();
+    const userSignOut = useUserSignOut();
     const isAuthenticated = !!localStorage.getItem(APP_TOKEN_KEY);
     const isMobile = useMediaQuery('(max-width: 576px)');
     const [showDrawer, setShowDrawer] = useState(false);
@@ -22,14 +24,15 @@ export const Header = () => {
     const onLogin = () => navigate('/signin');
     const onSignup = () => navigate('/register');
     const onLogout = () => {
-        localStorage.removeItem(APP_TOKEN_KEY);
-        navigate('/signin');
+        userSignOut.mutate();
     };
 
     const rightContent = (
         <Space direction={isMobile ? 'vertical' : 'horizontal'}>
             {isAuthenticated ? (
-                <Button onClick={onLogout}>Logout</Button>
+                <Button onClick={onLogout} loading={userSignOut?.isPending}>
+                    Logout
+                </Button>
             ) : (
                 <>
                     <Button onClick={onLogin}>Log in</Button>

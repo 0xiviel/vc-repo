@@ -7,6 +7,7 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy import select
 from app.settings import settings
+from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 from app.routes.root import router as root_router
@@ -21,6 +22,15 @@ app = FastAPI(
 
 # Include root router
 app.include_router(root_router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 engine = create_async_engine(settings.DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
