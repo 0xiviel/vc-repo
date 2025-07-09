@@ -1,5 +1,5 @@
 import { APP_TOKEN_KEY } from '@shared/constants';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -22,6 +22,20 @@ apiClient.interceptors.request.use(
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+apiClient.interceptors.response.use(
+    (response) => response,
+    (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            // Handle unauthorized globally
+            console.error('Unauthorized! Redirecting to login...');
+            localStorage.removeItem(APP_TOKEN_KEY);
+            window.location.href = '/signin'; // or use a router redirect
+        }
+
         return Promise.reject(error);
     }
 );

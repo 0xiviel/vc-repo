@@ -2,12 +2,9 @@ import { Button, Flex, Image, Space, Typography } from 'antd';
 import MainBg from '@shared/assets/images/main-page-bg.jpg';
 import styles from './Main.module.scss';
 import { useNavigate } from 'react-router';
-import { useGetUserInfo } from '@entities/user';
 
 export const Main = () => {
-    const userInfo = useGetUserInfo();
     const navigate = useNavigate();
-    console.log(userInfo)
     const onBook = () => navigate('/book-form');
 
     return (
