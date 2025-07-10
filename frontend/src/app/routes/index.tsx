@@ -1,11 +1,13 @@
 import { FullScreenLoader } from '@shared/ui/fullscreen-loader';
-import { AuthLayout, MainLayout } from '@shared/ui/layout';
+import { AuthLayout, MainLayout, AdminLayout } from '@shared/ui/layout';
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 
 const MainPage = lazy(() => import('@pages/main'));
 const BookPage = lazy(() => import('@pages/book'));
 const NotFoundPage = lazy(() => import('@pages/not-found'));
+
+const AdminEquipmentsPage = lazy(() => import('@pages/admin/equipments'));
 
 const SignInPage = lazy(() => import('@pages/signin'));
 const RegisterPage = lazy(() => import('@pages/register'));
@@ -31,6 +33,12 @@ export const AppRoutes = () => {
                 <Route element={<MainLayout />}>
                     <Route path='/' element={<MainPage />} />
                     <Route path='/book-form' element={<BookPage />} />
+                </Route>
+                <Route path='/admin' element={<AdminLayout />}>
+                    <Route
+                        path='equipments'
+                        element={<AdminEquipmentsPage />}
+                    />
                 </Route>
                 <Route path='*' element={<NotFoundPage />} />
             </Routes>

@@ -1,0 +1,13 @@
+.sidebar {
+    background-color: white;
+
+    .titleWrapper {
+        border-inline-end: 1px var(--ant-line-type) var(--ant-color-split);
+        height: 50px;
+    }
+
+    .menu {
+        height: 100%;
+        padding: 0 5px 24px;
+    }
+}

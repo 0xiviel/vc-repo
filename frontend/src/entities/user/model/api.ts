@@ -2,6 +2,7 @@ import { apiClient } from '@shared/lib/api';
 import {
     useMutation,
     useQuery,
+    useQueryClient,
     type QueryObserverResult,
     type UseBaseMutationResult,
 } from '@tanstack/react-query';
@@ -60,13 +61,17 @@ export const useUserSignIn = (): UseBaseMutationResult<
     SignInData,
     unknown
 > => {
-    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: (data: SignInData) => userSignIn(data),
         onSuccess: (data) => {
-            navigate('/');
             localStorage.setItem(APP_TOKEN_KEY, data?.access_token);
+            queryClient.invalidateQueries({
+                queryKey: ['getUserInfo'],
+            });
+
+            window.location.href = '/';
         },
     });
 };
@@ -78,10 +83,15 @@ export const useUserRegister = (): UseBaseMutationResult<
     unknown
 > => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: (data: RegisterData) => userRegister(data),
         onSuccess: () => {
             navigate('/signin');
+            queryClient.invalidateQueries({
+                queryKey: ['getUserInfo'],
+            });
         },
     });
 };
@@ -93,11 +103,16 @@ export const useUserSignOut = (): UseBaseMutationResult<
     unknown
 > => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: () => userSignOut(),
         onSuccess: () => {
             localStorage.removeItem(APP_TOKEN_KEY);
             navigate('/signin');
+            queryClient.invalidateQueries({
+                queryKey: ['getUserInfo'],
+            });
         },
     });
 };
