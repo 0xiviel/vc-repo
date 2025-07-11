@@ -32,3 +32,24 @@ class EquipmentRead(EquipmentBase):
 
     class Config:
         orm_mode = True
+
+
+class WorkspaceBase(BaseModel):
+    name: str
+    description: str | None = None
+
+
+class WorkspaceCreate(WorkspaceBase):
+    pass
+
+
+class WorkspaceUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+
+
+class WorkspaceRead(WorkspaceBase):
+    id: int
+
+    class Config:
+        from_attributes = True
