@@ -1,7 +1,7 @@
 """added workspace
 
 Revision ID: 1a6fa60fb2fa
-Revises: f0c62e0a2adf
+Revises: cbc62e731ddd
 Create Date: 2025-07-10 15:31:36.313499
 
 """
