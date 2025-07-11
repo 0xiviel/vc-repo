@@ -11,6 +11,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
 from app.routes.root import router as root_router
+from app.routes.equipment_router import router as equipment_router
+
 
 app = FastAPI(
     title="Virtual Company API",
@@ -31,6 +33,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include equipment router
+app.include_router(equipment_router, prefix="/equipment", tags=["equipment"])
 
 engine = create_async_engine(settings.DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
@@ -58,15 +62,20 @@ app.include_router(
     tags=["users"],
 )
 
+
 @app.on_event("startup")
 async def create_superuser():
     async with async_session_maker() as session:
         user_db = SQLAlchemyUserDatabase(session, User)
         manager = UserManager(user_db)
 
-        existing = await session.execute(select(User).where(User.email == "admin@example.com"))
+        existing = await session.execute(
+            select(User).where(User.email == "admin@example.com")
+        )
         if not existing.scalars().first():
             await manager.create(
-                UserCreate(email="admin@example.com", password="admin", username="admin"),
-                safe=True
+                UserCreate(
+                    email="admin@example.com", password="admin", username="admin"
+                ),
+                safe=True,
             )

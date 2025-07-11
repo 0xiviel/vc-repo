@@ -6,6 +6,7 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from app.models.user import User, get_user_db
 from app.settings import settings
 
+
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     reset_password_token_secret = settings.SECRET_KEY
     verification_token_secret = settings.SECRET_KEY
