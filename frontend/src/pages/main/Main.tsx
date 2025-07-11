@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router';
 
 export const Main = () => {
     const navigate = useNavigate();
-
     const onBook = () => navigate('/book-form');
 
     return (

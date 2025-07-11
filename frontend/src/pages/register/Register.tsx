@@ -1,49 +1,45 @@
-import { Button, Col, Flex, Form, Input, Row, Typography } from 'antd';
+import { Button, Flex, Form, Input, Typography } from 'antd';
 import styles from './Register.module.scss';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import { useUserRegister } from '@entities/user';
+
+type RegisterFormValues = {
+    email: string;
+    password: string;
+    confirmPassword?: string;
+    username: string;
+};
 
 export const Register = () => {
-    const navigate = useNavigate();
+    const userRegisterMutation = useUserRegister();
 
-    const onFinish = () => {
-        navigate('/signin');
+    const onFinish = (values: RegisterFormValues) => {
+        delete values.confirmPassword;
+        userRegisterMutation.mutate(values);
     };
 
     return (
         <Flex align='center' className={styles.register} vertical>
             <Typography.Title>Register</Typography.Title>
-            <Form layout='vertical' onFinish={onFinish}>
-                <Row gutter={[15, 15]}>
-                    <Col xs={24} sm={12}>
-                        <Form.Item
-                            label='First name'
-                            name='firstname'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your first name',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col xs={24} sm={12}>
-                        <Form.Item
-                            label='Last name'
-                            name='lastname'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your last name',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                </Row>
-                <Form.Item
+            <Form<RegisterFormValues>
+                layout='vertical'
+                onFinish={onFinish}
+                disabled={userRegisterMutation.isPending}
+                className={styles.form}
+            >
+                <Form.Item<RegisterFormValues>
+                    label='Username'
+                    name='username'
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input your username',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item<RegisterFormValues>
                     label='Email'
                     name='email'
                     rules={[
@@ -59,7 +55,7 @@ export const Register = () => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item
+                <Form.Item<RegisterFormValues>
                     label='Password'
                     name='password'
                     rules={[
@@ -71,10 +67,10 @@ export const Register = () => {
                 >
                     <Input.Password />
                 </Form.Item>
-                <Form.Item
+                <Form.Item<RegisterFormValues>
                     label='Confirm password'
                     dependencies={['password']}
-                    name='confirm'
+                    name='confirmPassword'
                     rules={[
                         {
                             required: true,
