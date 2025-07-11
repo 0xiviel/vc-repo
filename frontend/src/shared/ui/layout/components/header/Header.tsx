@@ -1,35 +1,83 @@
 import {
     Layout as ANTDLayout,
+    Avatar,
     Button,
     Drawer,
+    Dropdown,
     Flex,
     Space,
     Typography,
+    type MenuProps,
 } from 'antd';
 import styles from './Header.module.scss';
 import { Link, useNavigate } from 'react-router';
 import { APP_TOKEN_KEY } from '@shared/constants';
-import { useMediaQuery } from '@shared/hooks';
-import { MenuFoldOutlined } from '@ant-design/icons';
+import { useAuth, useMediaQuery } from '@shared/hooks';
+import {
+    AppstoreOutlined,
+    LogoutOutlined,
+    MenuFoldOutlined,
+    UserOutlined,
+} from '@ant-design/icons';
 import { useState } from 'react';
+import { useUserSignOut } from '@entities/user';
 
 export const Header = () => {
     const navigate = useNavigate();
+    const userSignOut = useUserSignOut();
     const isAuthenticated = !!localStorage.getItem(APP_TOKEN_KEY);
     const isMobile = useMediaQuery('(max-width: 576px)');
     const [showDrawer, setShowDrawer] = useState(false);
+    const { user } = useAuth();
 
     const onLogin = () => navigate('/signin');
     const onSignup = () => navigate('/register');
-    const onLogout = () => {
-        localStorage.removeItem(APP_TOKEN_KEY);
-        navigate('/signin');
-    };
+    const onLogout = () => userSignOut.mutate();
+    const onAdminPanelClick = () => navigate('/admin/equipments');
+
+    const items: MenuProps['items'] = [
+        ...(!user?.is_superuser // REMOVE !
+            ? [
+                  {
+                      key: 'adminPanel',
+                      label: 'Admin panel',
+                      icon: <AppstoreOutlined />,
+                      onClick: onAdminPanelClick,
+                  },
+              ]
+            : []),
+        {
+            key: 'logout',
+            label: 'Logout',
+            icon: <LogoutOutlined />,
+            onClick: onLogout,
+            disabled: userSignOut?.isPending,
+        },
+    ];
 
     const rightContent = (
         <Space direction={isMobile ? 'vertical' : 'horizontal'}>
             {isAuthenticated ? (
-                <Button onClick={onLogout}>Logout</Button>
+                <>
+                    <Dropdown
+                        menu={{ items }}
+                        placement='bottomRight'
+                        trigger={['click']}
+                    >
+                        <Flex
+                            align='center'
+                            gap={8}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <Avatar icon={<UserOutlined />} />
+                            {user?.username && (
+                                <Typography.Text strong>
+                                    {user?.username}
+                                </Typography.Text>
+                            )}
+                        </Flex>
+                    </Dropdown>
+                </>
             ) : (
                 <>
                     <Button onClick={onLogin}>Log in</Button>
