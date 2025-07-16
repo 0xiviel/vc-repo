@@ -13,6 +13,7 @@ from fastapi import FastAPI
 from app.routes.root import router as root_router
 from app.routes.equipment_router import router as equipment_router
 from app.routes.workspace_router import router as workspace_router
+from app.routes.booking_router import router as booking_router
 
 
 app = FastAPI(
@@ -37,6 +38,7 @@ app.add_middleware(
 # Include equipment router
 app.include_router(equipment_router, prefix="/equipment", tags=["equipment"])
 app.include_router(workspace_router, prefix="/workspaces", tags=["workspace"])
+app.include_router(booking_router, prefix="/bookings", tags=["booking"])
 
 engine = create_async_engine(settings.DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)

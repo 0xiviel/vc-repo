@@ -1,3 +1,5 @@
+from datetime import date
+
 from fastapi_users import schemas
 from pydantic import BaseModel
 
@@ -32,6 +34,7 @@ class EquipmentRead(EquipmentBase):
 
     class Config:
         orm_mode = True
+        from_attributes = True
 
 
 class WorkspaceBase(BaseModel):
@@ -51,5 +54,38 @@ class WorkspaceUpdate(BaseModel):
 class WorkspaceRead(WorkspaceBase):
     id: int
 
+    class Config:
+        from_attributes = True
+
+
+class BookingBase(BaseModel):
+    date_from: date
+    date_to: date
+    workspace_id: int
+    equipment_id: int | None = None
+    user_id: int
+
+
+class BookingCreate(BookingBase):
+    pass
+
+
+class BookingUpdate(BaseModel):
+    date_from: date | None = None
+    date_to: date | None = None
+    workspace_id: int | None = None
+    equipment_id: int | None = None
+
+
+class BookingRead(BookingBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class AvailableWorkspaceRead(BaseModel):
+    id: int
+    name: str
     class Config:
         from_attributes = True
