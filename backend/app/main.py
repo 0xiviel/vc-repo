@@ -64,6 +64,12 @@ app.include_router(
     tags=["users"],
 )
 
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth",
+    tags=["auth"],
+)
+
 
 @app.on_event("startup")
 async def create_superuser():
