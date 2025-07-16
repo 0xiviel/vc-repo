@@ -1,7 +1,11 @@
 from typing import List, Optional
+
+from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.database import get_async_session
+from app.models.schemas import WorkspaceCreate, WorkspaceUpdate
 from app.models.workspace import Workspace
 
 
@@ -9,9 +13,9 @@ class WorkspaceCRUD:
     def __init__(self, db_session: AsyncSession) -> None:
         self.db_session = db_session
 
-    async def create(self, name: str, description: Optional[str] = None) -> Workspace:
+    async def create(self, data: WorkspaceCreate) -> Workspace:
         """Create a new workspace"""
-        workspace = Workspace(name=name, description=description)
+        workspace = Workspace(name=data.name, description=data.description)
         self.db_session.add(workspace)
         await self.db_session.commit()
         await self.db_session.refresh(workspace)
@@ -29,20 +33,15 @@ class WorkspaceCRUD:
         result = await self.db_session.execute(query)
         return list(result.scalars().all())
     
-    async def update(
-        self,
-        workspace_id: int,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-    ) -> Optional[Workspace]:
+    async def update(self, workspace_id: int, data: WorkspaceUpdate) -> Optional[Workspace]:
         """Update a workspace"""
         workspace = await self.get(workspace_id)
-        if workspace is None:
+        if workspace:
             return None
-        if name is not None:
-            workspace.name = name
-        if description is not None:
-            workspace.description = description
+        if not data.name:
+            workspace.name = data.name
+        if not data.description:
+            workspace.description = data.description
         await self.db_session.commit()
         await self.db_session.refresh(workspace)
         return workspace
@@ -50,8 +49,14 @@ class WorkspaceCRUD:
     async def delete(self, workspace_id: int) -> bool:
         """Delete a workspace"""
         workspace = await self.get(workspace_id)
-        if workspace is None:
+        if workspace:
             return False
         await self.db_session.delete(workspace)
         await self.db_session.commit()
         return True
+
+
+def get_workspace_service(
+        session: AsyncSession = Depends(get_async_session),
+) -> WorkspaceCRUD:
+    return WorkspaceCRUD(session)
