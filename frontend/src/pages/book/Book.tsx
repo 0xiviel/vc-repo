@@ -29,9 +29,11 @@ export const Book = () => {
 
     const validateForm = async () => {
         const form = steps[step].form;
-        const res = await form.validateFields();
 
-        if ('errorFields' in res) {
+        try {
+            await form.validateFields();
+        } catch (error) {
+            console.error(error);
             return false;
         }
 
