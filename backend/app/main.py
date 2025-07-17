@@ -2,7 +2,7 @@ from fastapi_users import FastAPIUsers
 from app.models.user import User
 from app.models.schemas import UserCreate, UserRead, UserUpdate
 from app.services.user_manager import UserManager, get_user_manager
-from app.dependencies import auth_backend
+from app.dependencies.auth import auth_backend
 from fastapi_users.db import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy import select
@@ -12,6 +12,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from app.routes.root import router as root_router
 from app.routes.equipment_router import router as equipment_router
+from app.routes.workspace_router import router as workspace_router
+from app.routes.booking_router import router as booking_router
 
 
 app = FastAPI(
@@ -35,6 +37,8 @@ app.add_middleware(
 
 # Include equipment router
 app.include_router(equipment_router, prefix="/equipment", tags=["equipment"])
+app.include_router(workspace_router, prefix="/workspaces", tags=["workspace"])
+app.include_router(booking_router, prefix="/bookings", tags=["booking"])
 
 engine = create_async_engine(settings.DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
@@ -62,6 +66,12 @@ app.include_router(
     tags=["users"],
 )
 
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth",
+    tags=["auth"],
+)
+
 
 @app.on_event("startup")
 async def create_superuser():
@@ -75,7 +85,7 @@ async def create_superuser():
         if not existing.scalars().first():
             await manager.create(
                 UserCreate(
-                    email="admin@example.com", password="admin", username="admin"
+                    email="admin@example.com", password="admin", username="admin", is_superuser=True, is_active=True
                 ),
                 safe=True,
             )
