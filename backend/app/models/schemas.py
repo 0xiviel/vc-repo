@@ -89,3 +89,8 @@ class AvailableWorkspaceRead(BaseModel):
     name: str
     class Config:
         from_attributes = True
+
+
+class EquipmentUsageReportResponse(BaseModel):
+    data: dict[str, dict[str, int]]
+

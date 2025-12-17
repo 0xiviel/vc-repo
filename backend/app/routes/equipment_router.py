@@ -1,9 +1,11 @@
 # backend/app/routes/equipment_router.py
 
-from fastapi import APIRouter, Depends
+from datetime import date
+from fastapi import APIRouter, Depends, Query
 from app.services.equipment_service import EquipmentService, get_equipment_service
-from app.models.schemas import EquipmentCreate, EquipmentRead, EquipmentUpdate
-from app.dependencies.auth import current_active_superuser
+from app.models.schemas import EquipmentCreate, EquipmentRead, EquipmentUpdate, EquipmentUsageReportResponse
+from app.dependencies.auth import current_active_superuser, current_active_user
+from app.models.user import User
 
 
 router = APIRouter(
@@ -21,6 +23,21 @@ async def list_equipment(
     Accessible by anyone (no auth required).
     """
     return await service.get_all()
+
+
+@router.get("/usage-report", response_model=EquipmentUsageReportResponse)
+async def get_equipment_usage_report(
+    start_date: date = Query(..., description="Start date of the report period"),
+    end_date: date = Query(..., description="End date of the report period"),
+    service: EquipmentService = Depends(get_equipment_service),
+    _: User = Depends(current_active_user),
+):
+    """
+    Generate equipment usage report for a date range.
+    Returns the count of bookings for each equipment on each day within the range.
+    Requires authentication.
+    """
+    return await service.get_usage_report(start_date, end_date)
 
 
 @router.get("/{equipment_id}", response_model=EquipmentRead)
@@ -82,3 +99,4 @@ async def delete_equipment(
     """
     await service.delete(equipment_id)
     return {"detail": "Deleted"}
+
