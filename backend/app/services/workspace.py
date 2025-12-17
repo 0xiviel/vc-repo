@@ -20,20 +20,22 @@ class WorkspaceCRUD:
         await self.db_session.commit()
         await self.db_session.refresh(workspace)
         return workspace
-    
+
     async def get(self, workspace_id: int) -> Optional[Workspace]:
         """Get a workspace by ID"""
         query = select(Workspace).where(Workspace.id == workspace_id)
         result = await self.db_session.execute(query)
         return result.scalar_one_or_none()
-    
+
     async def get_all(self) -> List[Workspace]:
         """Get all workspaces"""
         query = select(Workspace)
         result = await self.db_session.execute(query)
         return list(result.scalars().all())
-    
-    async def update(self, workspace_id: int, data: WorkspaceUpdate) -> Optional[Workspace]:
+
+    async def update(
+        self, workspace_id: int, data: WorkspaceUpdate
+    ) -> Optional[Workspace]:
         """Update a workspace"""
         workspace = await self.get(workspace_id)
         if workspace:
@@ -45,7 +47,7 @@ class WorkspaceCRUD:
         await self.db_session.commit()
         await self.db_session.refresh(workspace)
         return workspace
-    
+
     async def delete(self, workspace_id: int) -> bool:
         """Delete a workspace"""
         workspace = await self.get(workspace_id)
@@ -57,6 +59,6 @@ class WorkspaceCRUD:
 
 
 def get_workspace_service(
-        session: AsyncSession = Depends(get_async_session),
+    session: AsyncSession = Depends(get_async_session),
 ) -> WorkspaceCRUD:
     return WorkspaceCRUD(session)

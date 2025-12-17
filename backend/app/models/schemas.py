@@ -87,10 +87,10 @@ class BookingRead(BookingBase):
 class AvailableWorkspaceRead(BaseModel):
     id: int
     name: str
+
     class Config:
         from_attributes = True
 
 
 class EquipmentUsageReportResponse(BaseModel):
     data: dict[str, dict[str, int]]
-

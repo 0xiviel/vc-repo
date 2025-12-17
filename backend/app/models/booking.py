@@ -11,6 +11,7 @@ class Booking(Base):
     """
     Model for storing information about booked workplaces and equipment.
     """
+
     __tablename__ = "bookings"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -18,8 +19,12 @@ class Booking(Base):
     date_to: Mapped[date] = mapped_column(Date, nullable=False)
 
     # Foreign keys
-    workspace_id: Mapped[int] = mapped_column(Integer, ForeignKey("workspaces.id"), nullable=False)
-    equipment_id: Mapped[int] = mapped_column(Integer, ForeignKey("equipment.id"), nullable=True)
+    workspace_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("workspaces.id"), nullable=False
+    )
+    equipment_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("equipment.id"), nullable=True
+    )
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("user.id"), nullable=False)
 
     # Relationships

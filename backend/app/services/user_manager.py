@@ -10,6 +10,7 @@ from app.settings import settings
 
 security = HTTPBearer()
 
+
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     reset_password_token_secret = settings.SECRET_KEY
     verification_token_secret = settings.SECRET_KEY
@@ -26,7 +27,9 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Security(security),
 ):
     if not credentials:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
     return {"token": credentials.credentials}
 
 

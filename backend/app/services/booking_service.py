@@ -20,7 +20,7 @@ class BookingCRUD:
             date_to=data.date_to,
             workspace_id=data.workspace_id,
             equipment_id=data.equipment_id,
-            user_id=data.user_id
+            user_id=data.user_id,
         )
         self.db_session.add(booking)
         await self.db_session.commit()
@@ -68,7 +68,9 @@ class BookingCRUD:
         await self.db_session.commit()
         return True
 
-    async def get_available_workspaces(self, start_date: date, end_date: date) -> List[AvailableWorkspaceRead]:
+    async def get_available_workspaces(
+        self, start_date: date, end_date: date
+    ) -> List[AvailableWorkspaceRead]:
         """
         Get all available (unbooked) workspaces for a given date range
 
@@ -78,12 +80,7 @@ class BookingCRUD:
         # First, find all workspaces that are booked in the specified period
         booked_query = (
             select(Booking.workspace_id)
-            .where(
-                and_(
-                    Booking.date_from <= end_date,
-                    Booking.date_to >= start_date
-                )
-            )
+            .where(and_(Booking.date_from <= end_date, Booking.date_to >= start_date))
             .distinct()
         )
         booked_result = await self.db_session.execute(booked_query)
@@ -104,6 +101,6 @@ class BookingCRUD:
 
 
 def get_booking_service(
-        session: AsyncSession = Depends(get_async_session),
+    session: AsyncSession = Depends(get_async_session),
 ) -> BookingCRUD:
     return BookingCRUD(session)

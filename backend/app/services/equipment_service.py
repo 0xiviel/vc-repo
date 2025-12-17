@@ -55,8 +55,8 @@ class EquipmentService:
         """
         if end_date < start_date:
             raise HTTPException(
-                status_code=422, 
-                detail="end_date must be greater than or equal to start_date"
+                status_code=422,
+                detail="end_date must be greater than or equal to start_date",
             )
 
         # Get all equipment
@@ -70,7 +70,7 @@ class EquipmentService:
                 and_(
                     Booking.equipment_id.isnot(None),
                     Booking.date_from <= end_date,
-                    Booking.date_to >= start_date
+                    Booking.date_to >= start_date,
                 )
             )
         )
@@ -105,4 +105,3 @@ def get_equipment_service(
     session: AsyncSession = Depends(get_async_session),
 ) -> EquipmentService:
     return EquipmentService(session)
-

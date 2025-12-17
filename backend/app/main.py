@@ -21,7 +21,7 @@ app = FastAPI(
     description="API for Virtual Company application",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # Include root router
@@ -85,7 +85,11 @@ async def create_superuser():
         if not existing.scalars().first():
             await manager.create(
                 UserCreate(
-                    email="admin@example.com", password="admin", username="admin", is_superuser=True, is_active=True
+                    email="admin@example.com",
+                    password="admin",
+                    username="admin",
+                    is_superuser=True,
+                    is_active=True,
                 ),
                 safe=True,
             )
