@@ -3,15 +3,17 @@
 from datetime import date
 from fastapi import APIRouter, Depends, Query
 from app.services.equipment_service import EquipmentService, get_equipment_service
-from app.models.schemas import EquipmentCreate, EquipmentRead, EquipmentUpdate, EquipmentUsageReportResponse
+from app.models.schemas import (
+    EquipmentCreate,
+    EquipmentRead,
+    EquipmentUpdate,
+    EquipmentUsageReportResponse,
+)
 from app.dependencies.auth import current_active_superuser, current_active_user
 from app.models.user import User
 
 
-router = APIRouter(
-    prefix="/equipment",
-    tags=["equipment"]
-)
+router = APIRouter(prefix="/equipment", tags=["equipment"])
 
 
 @router.get("", response_model=list[EquipmentRead])
@@ -53,9 +55,7 @@ async def retrieve_equipment(
 
 
 @router.post(
-    "",
-    response_model=EquipmentRead,
-    dependencies=[Depends(current_active_superuser)]
+    "", response_model=EquipmentRead, dependencies=[Depends(current_active_superuser)]
 )
 async def create_equipment(
     data: EquipmentCreate,
@@ -71,7 +71,7 @@ async def create_equipment(
 @router.put(
     "/{equipment_id}",
     response_model=EquipmentRead,
-    dependencies=[Depends(current_active_superuser)]
+    dependencies=[Depends(current_active_superuser)],
 )
 async def update_equipment(
     equipment_id: int,
@@ -85,10 +85,7 @@ async def update_equipment(
     return await service.update(equipment_id, data)
 
 
-@router.delete(
-    "/{equipment_id}",
-    dependencies=[Depends(current_active_superuser)]
-)
+@router.delete("/{equipment_id}", dependencies=[Depends(current_active_superuser)])
 async def delete_equipment(
     equipment_id: int,
     service: EquipmentService = Depends(get_equipment_service),
@@ -99,4 +96,3 @@ async def delete_equipment(
     """
     await service.delete(equipment_id)
     return {"detail": "Deleted"}
-

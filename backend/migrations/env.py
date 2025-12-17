@@ -5,8 +5,8 @@ from alembic import context
 
 from app.settings import settings
 from app.database import Base
-from app.models.equipment import Equipment # noqa: F401
-from app.models.user import User # noqa: F401
+from app.models.equipment import Equipment  # noqa: F401
+from app.models.user import User  # noqa: F401
 
 # Alembic config object
 config = context.config

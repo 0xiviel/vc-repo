@@ -2,10 +2,18 @@ from fastapi import APIRouter, Depends, Query
 from datetime import date
 from typing import List
 from app.services.booking_service import BookingCRUD, get_booking_service
-from app.models.schemas import BookingCreate, BookingRead, BookingUpdate, AvailableWorkspaceRead
+from app.models.schemas import (
+    BookingCreate,
+    BookingRead,
+    BookingUpdate,
+    AvailableWorkspaceRead,
+)
 from app.services.user_manager import get_current_user
 from app.models.user import User
+
 router = APIRouter(prefix="", tags=["booking"])
+
+
 @router.post("", response_model=BookingRead)
 async def create_booking(
     data: BookingCreate,
@@ -16,6 +24,8 @@ async def create_booking(
     # Set the user_id to the current user's ID
     data.user_id = current_user.id
     return await service.create(data)
+
+
 @router.get("", response_model=List[BookingRead])
 async def get_all_bookings(
     service: BookingCRUD = Depends(get_booking_service),
@@ -23,6 +33,8 @@ async def get_all_bookings(
 ):
     """Get all bookings - must be authenticated"""
     return await service.get_all()
+
+
 @router.get("/available-workspaces", response_model=List[AvailableWorkspaceRead])
 async def get_available_workspaces(
     start_date: date = Query(..., description="Start date of the desired period"),
@@ -32,6 +44,8 @@ async def get_available_workspaces(
 ):
     """Get all available (unbooked) workspaces for a given date range - must be authenticated"""
     return await service.get_available_workspaces(start_date, end_date)
+
+
 @router.get("/{booking_id}", response_model=BookingRead)
 async def get_booking_by_id(
     booking_id: int,
@@ -40,6 +54,8 @@ async def get_booking_by_id(
 ):
     """Get a booking by ID - must be authenticated"""
     return await service.get(booking_id)
+
+
 @router.put("/{booking_id}", response_model=BookingRead)
 async def update_booking(
     booking_id: int,
@@ -49,6 +65,8 @@ async def update_booking(
 ):
     """Update a booking - must be authenticated"""
     return await service.update(booking_id, data)
+
+
 @router.delete("/{booking_id}")
 async def delete_booking(
     booking_id: int,
